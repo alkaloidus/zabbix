@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  zabbix_appliance:
+    image: zabbix/zabbix-appliance:latest
+    container_name: zabb_appliance
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Belgrade
+      - ZBX_STARTVMWARECOLLECTORS=10
+      - ZBX_VMWARECACHESIZE=8M
+      - ZBX_VMWAREFREQUENCY=60
+      - ZBX_VMWAREPERFFREQUENCY=60
+      - ZBX_VMWARETIMEOUT=30
+      - ZBX_STARTDISCOVERERS=10
+    ports:
+      - 80:80
+      - 10051:10051
+    restart: always
+    
+  zabbix-agent:
+    restart: always
+    image: zabbix/zabbix-agent:latest
+    container_name: zabbix_agent
+    ports:
+      - 10050:10050
+    environment:
+      ZBX_HOSTNAME: zabbix_appliance
+      ZBX_SERVER_HOST: zabbix_appliance
